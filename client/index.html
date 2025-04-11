@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Todo App</h1>
+
+        <div id="todo-list">
+            <h2>Todo List</h2>
+            <ul id="items-list"></ul>
+        </div>
+
+        <div id="add-todo">
+            <h2>Add Todo</h2>
+            <form id="add-todo-form">
+                <input type="text" id="title" placeholder="Title" required>
+                <textarea id="description" placeholder="Description" required></textarea>
+                <input type="text" id="category" placeholder="Category" required>
+                <button type="submit">Add</button>
+            </form>
+        </div>
+
+        <div id="add-progression">
+            <h2>Add Progression</h2>
+            <form id="add-progression-form">
+                <input type="number" id="todo-id" placeholder="Todo Id" required>
+                <input type="date" id="date" placeholder="Date" required>
+                <input type="number" id="percent" placeholder="Percent" required min="1" max="99">
+                <button type="submit">Add Progression</button>
+            </form>
+        </div>
+
+        <div id="print-items">
+            <h2>Print Items</h2>
+            <button id="print-button">Print</button>
+            <div id="print-output"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

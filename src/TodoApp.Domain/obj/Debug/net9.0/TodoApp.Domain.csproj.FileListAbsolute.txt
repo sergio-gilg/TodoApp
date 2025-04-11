@@ -1,0 +1,11 @@
+C:\Projects\TodoApp\src\TodoApp.Domain\bin\Debug\net9.0\TodoApp.Domain.deps.json
+C:\Projects\TodoApp\src\TodoApp.Domain\bin\Debug\net9.0\TodoApp.Domain.dll
+C:\Projects\TodoApp\src\TodoApp.Domain\bin\Debug\net9.0\TodoApp.Domain.pdb
+C:\Projects\TodoApp\src\TodoApp.Domain\obj\Debug\net9.0\TodoApp.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\TodoApp\src\TodoApp.Domain\obj\Debug\net9.0\TodoApp.Domain.AssemblyInfoInputs.cache
+C:\Projects\TodoApp\src\TodoApp.Domain\obj\Debug\net9.0\TodoApp.Domain.AssemblyInfo.cs
+C:\Projects\TodoApp\src\TodoApp.Domain\obj\Debug\net9.0\TodoApp.Domain.csproj.CoreCompileInputs.cache
+C:\Projects\TodoApp\src\TodoApp.Domain\obj\Debug\net9.0\TodoApp.Domain.dll
+C:\Projects\TodoApp\src\TodoApp.Domain\obj\Debug\net9.0\refint\TodoApp.Domain.dll
+C:\Projects\TodoApp\src\TodoApp.Domain\obj\Debug\net9.0\TodoApp.Domain.pdb
+C:\Projects\TodoApp\src\TodoApp.Domain\obj\Debug\net9.0\ref\TodoApp.Domain.dll

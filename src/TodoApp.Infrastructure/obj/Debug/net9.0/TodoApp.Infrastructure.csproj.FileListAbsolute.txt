@@ -1,0 +1,17 @@
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\obj\Debug\net9.0\TodoApp.Infrastructure.csproj.AssemblyReference.cache
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\obj\Debug\net9.0\TodoApp.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\obj\Debug\net9.0\TodoApp.Infrastructure.AssemblyInfoInputs.cache
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\obj\Debug\net9.0\TodoApp.Infrastructure.AssemblyInfo.cs
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\obj\Debug\net9.0\TodoApp.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\bin\Debug\net9.0\TodoApp.Infrastructure.deps.json
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\bin\Debug\net9.0\TodoApp.Infrastructure.dll
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\bin\Debug\net9.0\TodoApp.Infrastructure.pdb
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\bin\Debug\net9.0\TodoApp.Application.dll
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\bin\Debug\net9.0\TodoApp.Domain.dll
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\bin\Debug\net9.0\TodoApp.Domain.pdb
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\bin\Debug\net9.0\TodoApp.Application.pdb
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\obj\Debug\net9.0\TodoApp..D6B2378B.Up2Date
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\obj\Debug\net9.0\TodoApp.Infrastructure.dll
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\obj\Debug\net9.0\refint\TodoApp.Infrastructure.dll
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\obj\Debug\net9.0\TodoApp.Infrastructure.pdb
+C:\Projects\TodoApp\src\TodoApp.Infrastructure\obj\Debug\net9.0\ref\TodoApp.Infrastructure.dll

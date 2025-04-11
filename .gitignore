@@ -1,0 +1,9 @@
+/bin
+/obj
+.vs
+*.user
+*.suo
+*.csproj.user
+*.sln.docstates
+/client/node_modules
+/client/dist
