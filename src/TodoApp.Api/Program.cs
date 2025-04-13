@@ -18,8 +18,6 @@ builder.Services.AddScoped<ITodoListRepository, TodoListRepository>();
 builder.Services.AddScoped<ITodoList, TodoList>();
 
 // Register MediatR
-//builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-//builder.Services.AddMediatR(Assembly.Load("TodoApp.Application"));
 builder.Services.AddMediatR(typeof(TodoApp.Application.Queries.GetAllTodoItemsQuery).Assembly);
 
 builder.Services.AddTransient<AddTodoItemCommandHandler>();

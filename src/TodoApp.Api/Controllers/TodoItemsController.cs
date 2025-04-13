@@ -3,6 +3,7 @@ using MediatR;
 using TodoApp.Application.Commands;
 using System.Threading.Tasks;
 using TodoApp.Application.Queries;
+using TodoApp.Api.ApiResponses;
 
 namespace TodoApp.Api.Controllers;
 
@@ -14,70 +15,175 @@ public class TodoItemsController : ControllerBase
 
     public TodoItemsController(IMediator mediator)
     {
+
         _mediator = mediator;
     }
 
     [HttpPost]
     public async Task<IActionResult> AddTodoItem([FromBody] AddTodoItemCommand command)
     {
-        await _mediator.Send(command);
-        return Ok();
+        try
+        {
+            await _mediator.Send(command);
+            return Ok();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new ErrorResponse { Message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ErrorResponse { Message = "An error occurred while processing your request." });
+        }
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateTodoItem([FromBody] UpdateTodoItemCommand command)
     {
-        await _mediator.Send(command);
-        return Ok();
+        try
+        {
+            Console.WriteLine($"Updating TodoItem with ID: {command.Id}");
+            await _mediator.Send(command);
+            return Ok();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new ErrorResponse { Message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new ErrorResponse { Message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ErrorResponse { Message = "An error occurred while processing your request." });
+        }
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> RemoveTodoItem(int id)
     {
-        await _mediator.Send(new RemoveTodoItemCommand { Id = id });
-        return Ok();
+        try
+        {
+            await _mediator.Send(new RemoveTodoItemCommand { Id = id });
+            return Ok();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new ErrorResponse { Message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new ErrorResponse { Message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ErrorResponse { Message = "An error occurred while processing your request." });
+        }
+
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllTodoItems()
     {
-        var result = await _mediator.Send(new GetAllTodoItemsQuery());
-        return Ok(result);
+        try
+        {
+            var result = await _mediator.Send(new GetAllTodoItemsQuery());
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ErrorResponse { Message = "An error occurred while processing your request." });
+        }
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTodoItemById(int id)
     {
-        var result = await _mediator.Send(new GetTodoItemByIdQuery { Id = id });
-        if (result == null)
+        try
         {
-            return NotFound();
+            var result = await _mediator.Send(new GetTodoItemByIdQuery { Id = id });
+            if (result == null)
+            {
+                return NotFound(new ErrorResponse { Message = "TodoItem not found." });
+            }
+            return Ok(result);
         }
-        return Ok(result);
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ErrorResponse { Message = "An error occurred while processing your request." });
+        }
     }
 
     [HttpPost("{id}/progressions")]
     public async Task<IActionResult> RegisterProgression(int id, [FromBody] RegisterProgressionCommand command)
     {
-        if (id != command.Id)
+        try
         {
-            return BadRequest("ID in route and body do not match");
+            if (id != command.Id)
+            {
+                return BadRequest("ID in route and body do not match");
+            }
+            await _mediator.Send(command);
+            return Ok();
         }
-        await _mediator.Send(command);
-        return Ok();
+        catch (ArgumentOutOfRangeException ex)
+        {
+            return BadRequest(new ErrorResponse { Message = ex.Message });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new ErrorResponse { Message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new ErrorResponse { Message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ErrorResponse { Message = "An error occurred while processing your request." });
+        }
     }
 
     [HttpGet("{id}/progressions")]
     public async Task<IActionResult> GetTodoItemProgressions(int id)
     {
-        var result = await _mediator.Send(new GetTodoItemProgressionsQuery { Id = id });
-        return Ok(result);
+        try
+        {
+            var result = await _mediator.Send(new GetTodoItemProgressionsQuery { Id = id });
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ErrorResponse { Message = "An error occurred while processing your request." });
+        }
+
     }
 
     [HttpGet("print")]
     public async Task<IActionResult> PrintTodoItems()
     {
-        await _mediator.Send(new PrintTodoItemsCommand());
-        return Ok();
+        try
+        {
+            await _mediator.Send(new PrintTodoItemsCommand());
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ErrorResponse { Message = "An error occurred while processing your request." });
+        }
+    }
+
+    [HttpGet("categories")]
+    public async Task<IActionResult> GetAllCategories()
+    {
+        try{
+            var result = await _mediator.Send(new GetAllCategoriesQuery());
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new ErrorResponse { Message = "An error occurred while processing your request." });
+        }  
     }
 }

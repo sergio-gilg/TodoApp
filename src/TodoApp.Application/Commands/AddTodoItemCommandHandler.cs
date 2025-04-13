@@ -18,6 +18,7 @@ public class AddTodoItemCommandHandler : IRequestHandler<AddTodoItemCommand, Uni
     public async Task<Unit> Handle(AddTodoItemCommand request, CancellationToken cancellationToken)
     {
         var id = _repository.GetNextId();
+        Console.WriteLine($"Adding TodoItem with ID: {id}");
         _todoList.AddItem(id, request.Title, request.Description, request.Category);
         return Unit.Value;
 

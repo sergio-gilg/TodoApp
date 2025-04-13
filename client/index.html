@@ -1,46 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo App</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Boostrap Icon-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
 </head>
+
 <body>
-    <div class="container">
-        <h1>Todo App</h1>
-
-        <div id="todo-list">
+    <div class="container-fluid">
+        <h1 class="text-center mb-4">Todo App</h1>
+        <div id="todo-list" class="mb-4">
             <h2>Todo List</h2>
-            <ul id="items-list"></ul>
+            <ul id="items-list" class="list-group"></ul>
         </div>
 
-        <div id="add-todo">
-            <h2>Add Todo</h2>
-            <form id="add-todo-form">
-                <input type="text" id="title" placeholder="Title" required>
-                <textarea id="description" placeholder="Description" required></textarea>
-                <input type="text" id="category" placeholder="Category" required>
-                <button type="submit">Add</button>
-            </form>
+        <div id="todo-list" class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h2>Todo List</h2>
+            <button type="button" id="btnNuevo" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#addTodoModal" title="Add Todo Item">
+                <i class="bi bi-plus-circle"></i>
+                Add Todo Item
+            </button>
         </div>
-
-        <div id="add-progression">
-            <h2>Add Progression</h2>
-            <form id="add-progression-form">
-                <input type="number" id="todo-id" placeholder="Todo Id" required>
-                <input type="date" id="date" placeholder="Date" required>
-                <input type="number" id="percent" placeholder="Percent" required min="1" max="99">
-                <button type="submit">Add Progression</button>
-            </form>
-        </div>
-
-        <div id="print-items">
-            <h2>Print Items</h2>
-            <button id="print-button">Print</button>
-            <div id="print-output"></div>
+        <table id="items-table" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Completed</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <!-- Add Todo Form Modal -->
+    <div class="modal fade" id="addTodoModal" tabindex="-1" aria-labelledby="addTodoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTodoModalLabel">Add Todo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-todo-form">
+                        <div class="mb-3 d-none">                          
+                            <input type="text" class="form-control" id="id">
+                        </div>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-select" id="category" required>
+                                <option value="" disabled selected>Select a category</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <!-- Add Prgression Form Modal -->
+    <div class="modal fade" id="addProgressionModal" tabindex="-1" aria-labelledby="addProgressionModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProgressionModalLabel">Add Progression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-progression-form">
+                        <div class="mb-3">
+                            <label for="todo-id" class="form-label">Todo Id</label>
+                            <input type="number" class="form-control" id="todo-id" required disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="todo-id" class="form-label">Todo Title</label>
+                            <input type="text" class="form-control" id="todo-title" required disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="percent" class="form-label">Percent</label>
+                            <input type="number" class="form-control" id="percent" required min="1" max="99">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Progression</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="print-items" class="mb-4">
+            <h2>Print Items</h2>
+            <button id="print-button" class="btn btn-secondary">Print</button>
+            <pre id="print-output"></pre>
+        </div>
+    </div>
+    <script src="js/app.js" type="module"></script>
+    <script src="js/api.js" type="module"></script>
+    <script src="js/ui.js" type="module"></script>
+    <script src="vendor/bootstrap.min.js"></script>
+
 </body>
+
 </html>

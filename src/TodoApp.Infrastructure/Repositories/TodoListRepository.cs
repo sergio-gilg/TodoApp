@@ -5,7 +5,7 @@ namespace TodoApp.Infrastructure.Repositories;
 
 public class TodoListRepository : ITodoListRepository
 {
-    private int nextId = 1;
+    private static int nextId = 1;
     private List<string> categories = new List<string> { "Work", "Personal", "Study" };
 
     public int GetNextId() => nextId++;

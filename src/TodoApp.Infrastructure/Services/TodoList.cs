@@ -72,7 +72,7 @@ public class TodoList : ITodoList
 
         if (item.Progressions.Sum(p => p.Percent) + percent > 100)
         {
-            throw new ArgumentException("Total percent exceed 100%.");
+            throw new InvalidOperationException("Total percent exceed 100%.");
         }
 
         item.Progressions.Add(new Progression { Date = dateTime, Percent = percent });
