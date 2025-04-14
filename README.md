@@ -39,9 +39,9 @@ Antes de comenzar, asegúrate de tener instalados los siguientes programas:
 1. Asegúrate de que SQLite esté instalado y configurado en tu máquina.
 2. Ejecuta las migraciones para crear las tablas necesarias:
 
-   ```bash
-   cd src/TodoApp.Api
-   dotnet ef database update
+   ```bash   
+   dotnet ef database drop --project src/TodoApp.Infrastructure --startup-project src/TodoApp.Api  
+   dotnet ef database update --project src/TodoApp.Infrastructure --startup-project src/TodoApp.Api   
    ```
 
 ---

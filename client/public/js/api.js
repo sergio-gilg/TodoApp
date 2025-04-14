@@ -15,7 +15,7 @@ export async function getTodoItems() {
 // Función para agregar un nuevo TodoItem
 export async function addTodoItem(item) {
     try {
-        console.info('Adding Todo item:', item);
+
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
@@ -26,8 +26,8 @@ export async function addTodoItem(item) {
         if (response.ok) {
             return true;
         } else {
-            const error = await response.json(); // Leer el cuerpo de la respuesta de error
-            alert(`Failed to add Todo item: ${error.message}`); // Mostrar el mensaje de error de la API        
+            const error = await response.json();
+            console.error('Failed to add Todo item:', error);
             return false;
         }
     } catch (error) {
@@ -49,8 +49,12 @@ export async function updateTodoItem(item) {
         if (response.ok) {
             return true;
         } else {
-            const error = await response.json(); // Leer el cuerpo de la respuesta de error
-            alert(`Failed to update Todo item: ${error.message}`); // Mostrar el mensaje de error de la API        
+            const error = await response.json();
+           Swal.fire({
+                title: `Failed to update Todo item`,
+                text: `${error.message}`,
+                icon: 'error',
+            }); 
             return false;
         }
     } catch (error) {
@@ -71,8 +75,12 @@ export async function addProgression(progression) {
         if (response.ok) {
             return true;
         } else {
-            const error = await response.json(); // Leer el cuerpo de la respuesta de error
-            alert(`Failed to add Progression: ${error.message}`); // Mostrar el mensaje de error de la API        
+            const error = await response.json();
+            Swal.fire({
+                title: `Failed to add Progression`,
+                text: `${error.message}`,
+                icon: 'error',
+            });     
             return false;
         }
     } catch (error) {
@@ -116,7 +124,11 @@ export async function removeTodoItem(id) {
             return true;
         } else {
             const error = await response.json(); // Leer el cuerpo de la respuesta de error
-            alert(`Failed to delete Todo item: ${error.message}`); // Mostrar el mensaje de error de la API        
+            Swal.fire({
+                title: `Failed to delete Todo item`,
+                text: `${error.message}`,
+                icon: 'error',
+            }); 
             return false;
         }
     } catch (error) {

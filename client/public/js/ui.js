@@ -4,11 +4,10 @@ import { fetchAndDisplayTodoItems } from './app.js';
 export function displayPrintItems(items, todoListElement) {
     todoListElement.innerHTML = '';
     items.forEach(item => {
-        console.log("displayTodoItems:", item);
         const li = document.createElement('li');
         li.classList.add('todo-item', 'list-group-item');
         li.innerHTML = `
-            <h3>${item.title} - ${item.description} (${item.category}) Completed: ${item.isCompleted}</h3>
+            <h4>${item.id}) ${item.title} - ${item.description} (${item.category}) Completed: ${item.isCompleted}</h4>
         `;
         if (item.progressions && item.progressions.length > 0) {
             let totalPercent = 0;
@@ -16,9 +15,9 @@ export function displayPrintItems(items, todoListElement) {
                 totalPercent = totalPercent + progression.percent;
                 li.innerHTML += `
                     <div class="progression">
-                        <p>${new Date(progression.date).toLocaleDateString()} - ${totalPercent}%</p>
-                        <div class="progress-bar">
-                            <div class="progress-bar-fill" style="width: ${totalPercent}%;"></div>
+                        <p>${new Date(progression.date).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })} - ${totalPercent}%</p>
+                        <div class="progress-bar" style="height: 20px;">
+                            <div class="progress-bar-fill" style="width: ${totalPercent}%;" aria-valuenow="${totalPercent}"> ${totalPercent}%</div>
                         </div>
                     </div>
                 `;
@@ -28,7 +27,7 @@ export function displayPrintItems(items, todoListElement) {
     });
 };
 
-export function displayTodoItems(items, itemsTableBody, calculateTotalPercent) {
+export function displayTodoItems(items, itemsTableBody) {
     itemsTableBody.innerHTML = ''; // Clear the table
     items.forEach(item => {
         const row = document.createElement('tr');
@@ -56,51 +55,54 @@ export function displayTodoItems(items, itemsTableBody, calculateTotalPercent) {
     // Add event listeners to the progression buttons
     const addProgressionButtons = document.querySelectorAll('.add-progression-btn');
     addProgressionButtons.forEach(button => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
             const todoId = parseInt(button.dataset.id, 10);
-            document.getElementById('todo-id').value = todoId; // Select the item in the dropdown
-            const todoTitle = button.dataset.title; // Get the title from the button's data attribute
-            document.getElementById('todo-title').value = todoTitle; // Set the title in the modal
+            document.getElementById('todo-id').value = todoId; 
+            const todoTitle = button.dataset.title; 
+            document.getElementById('todo-title').value = todoTitle; 
+
             // Limpiar los campos de la modal
-            document.getElementById('date').value = ''; // Clear the date input
-            document.getElementById('percent').value = ''; // Clear the percent input
-            // Use Bootstrap's Modal class to show the modal
-            const progressionModalElement = document.getElementById('addProgressionModal');
-            const progressionModal = new bootstrap.Modal(progressionModalElement);
-            progressionModal.show();
+            document.getElementById('date').value = ''; 
+            document.getElementById('percent').value = ''; 
+
+            // Use Bootstrap's Modal class to show the modal          
+            $("#addProgressionModal").modal("show");
         });
     });
 
     const editTodoItemButtons = document.querySelectorAll('.edit-todoItem-btn');
     editTodoItemButtons.forEach(button => {
-        button.addEventListener('click', () => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
             console.log("Edit Todo Item Button clicked:", button.dataset);
             const todoId = parseInt(button.dataset.id, 10);
-            document.getElementById('id').value = todoId; // Select the item in the dropdown
-            const todoTitle = button.dataset.title; // Get the title from the button's data attribute
-            document.getElementById('title').value = todoTitle; // Set the title in the modal
-            const todoDescription = button.dataset.description; // Get the description from the button's data attribute
-            document.getElementById('description').value = todoDescription; // Set the description in the modal
-            const todoCategory = button.dataset.category; // Get the category from the button's data attribute
-            document.getElementById('category').value = todoCategory; // Set the category in the modal
+            document.getElementById('id').value = todoId; 
+            const todoTitle = button.dataset.title; 
+            document.getElementById('title').value = todoTitle;
+            const todoDescription = button.dataset.description; 
+            document.getElementById('description').value = todoDescription; 
+            const todoCategory = button.dataset.category; 
+            document.getElementById('category').value = todoCategory; 
 
             // Cambiar el título del modal
             const modalTitle = document.querySelector('#addTodoModal .modal-title');
             modalTitle.textContent = 'Update Todo Item';
+
             // Cambiar el texto del botón "Agregar"
             const modalButton = document.querySelector('#addTodoModal .btn-primary');
             modalButton.textContent = 'Update';
+
             // Desactivar el campo Title
             const titleInput = document.getElementById('title');
             titleInput.disabled = true;
+
             // Desactivar el campo Category
             const categoryInput = document.getElementById('category');
             categoryInput.disabled = true;
 
             // Use Bootstrap's Modal class to show the modal 
-            const addTodoModalElement = document.getElementById('addTodoModal');
-            const addTodoModal = new bootstrap.Modal(addTodoModalElement);
-            addTodoModal.show();
+            $("#addTodoModal").modal("show");        
         });
     });
 
@@ -109,18 +111,26 @@ export function displayTodoItems(items, itemsTableBody, calculateTotalPercent) {
     removeTodoItemButtons.forEach(button => {
         button.addEventListener('click', async (event) => {
             event.preventDefault();
-  
-            const todoId = parseInt(button.dataset.id, 10);
-            if (confirm('Are you sure you want to delete this Todo item?')) {
-                try {
-                    if (await removeTodoItem(todoId)) {
-                        await fetchAndDisplayTodoItems();                   
+
+            const todoId = parseInt(button.dataset.id);
+            Swal.fire({
+                title: "Are you sure you want to delete this Todo item?",
+                showCancelButton: true,
+                confirmButtonText: "Remove",
+                cancelButtonText: "Cancel"
+            }).then(async (result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    try {
+                        if (await removeTodoItem(todoId)) {
+                            await fetchAndDisplayTodoItems();
+                        }
+                    } catch (error) {
+                        console.error('Error deleting Todo item:', error);
+                        Swal.fire('An error occurred while deleting the Todo item.');
                     }
-                } catch (error) {
-                    console.error('Error deleting Todo item:', error);
-                    alert('An error occurred while deleting the Todo item.');
                 }
-            }
+            });
         });
     });
 };

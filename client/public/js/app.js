@@ -1,18 +1,16 @@
-import { getTodoItems, addTodoItem, addProgression, printItems, getCategories, updateTodoItem } from './api.js';
+import { getTodoItems, addTodoItem, addProgression, getCategories, updateTodoItem } from './api.js';
 import { displayTodoItems, displayPrintItems } from './ui.js';
 
 const todoListElement = document.getElementById('items-list');
 const addTodoForm = document.getElementById('add-todo-form');
 const addProgressionForm = document.getElementById('add-progression-form');
-const printOutput = document.getElementById('print-output');
 const categorySelect = document.getElementById('category');
 const itemsTableBody = document.querySelector('#items-table tbody');
-const addTodoModal = document.getElementById('addTodoModal');
-const addProgressionModal = document.getElementById('addProgressionModal');
 const btnAddTodoModal = document.getElementById('btnAddTodoModal');
+const btnAddTodoForm = document.getElementById('btnAddTodoForm');
+const btnAddProgressionModal = document.getElementById('btnAddProgressionModal');
 
 const todoItems = [];
-const newTodo = { id: 0, title: '', description: '', category: '' };
 let newProgression = { id: null, date: null, percent: null };
 
 const calculateTotalPercent = (progressions) => {
@@ -43,59 +41,56 @@ const handleAddTodoItem = async (event) => {
 
     // Verificar si los campos están vacíos
     if (!title.trim() || !description.trim() || !category.trim()) {
-        alert('Fields cannot be empty or contain only spaces.');
+        Swal.fire('Fields cannot be empty or contain only spaces.');
         return;
     }
 
-    if (isNaN(id)) {
-        // Asignar los valores a newTodo
-        newTodo.title = title;
-        newTodo.description = description;
-        newTodo.category = category;
+    const newTodo = { id, title, description, category };
 
+    if (isNaN(id)) {
         // Llamar a la función para agregar el nuevo TodoItem
-        if (await addTodoItem(newTodo)) {
-            //await fetchAndDisplayTodoItems();
-            newTodo.title = '';
-            newTodo.description = '';
-            newTodo.category = '';
+        const success = await addTodoItem(newTodo);
+        if (success) {
+
+            // Actualizar la tabla de TodoItems
+            await fetchAndDisplayTodoItems();
+
+            // Limpiar el formulario
             addTodoForm.reset();
+
             // Ocultar el modal de Bootstrap
-            const modal = bootstrap.Modal(addTodoModal);
-            modal.hide();
+            $('#addTodoModal').modal('hide');
         } else {
-            const error = await response.json(); // Leer el cuerpo de la respuesta de error
-            alert(`Failed to add Todo Item: ${error.message}`); // Mostrar el mensaje de error de la API
+            const error = await response.json();
+            Swal.fire(`Failed to add Todo Item: ${error.message}`);
         }
 
     } else {
-        // Actualizar el TodoItem existente
-        console.log('Updating Todo item:', id, "todoItems:", todoItems);
+        // Actualizar el TodoItem existente            
         const todoItem = todoItems.find(item => item.id === id);
         if (todoItem) {
             todoItem.title = title;
             todoItem.description = description;
             todoItem.category = category;
-            console.log('Todo item found:', todoItem);
 
             if (await updateTodoItem(todoItem)) {
-                // await fetchAndDisplayTodoItems();
+                // Actualizar la tabla de TodoItems
+                await fetchAndDisplayTodoItems();
+
                 // Cerrar el modal de Bootstrap
-                const modal = new bootstrap.Modal(addTodoModal);
-                modal.hide();
+                $('#addTodoModal').modal('hide');
             } else {
-                const error = await response.json(); // Leer el cuerpo de la respuesta de error
-                alert(`Failed to update Todo Item: ${error.message}`); // Mostrar el mensaje de error de la API
+                const error = await response.json();
+                Swal.fire(`Failed to update Todo Item: ${error.message}`);
             }
 
         } else {
-            alert('Todo item not found!');
+            Swal.fire('Todo item not found!');
         }
     }
 };
 
 const handleAddProgression = async (event) => {
-    console.log('handleAddProgression called:', event);
     event.preventDefault();
 
     const todoId = parseInt(document.getElementById('todo-id').value);
@@ -104,14 +99,13 @@ const handleAddProgression = async (event) => {
 
     // Verificar si los campos están vacíos
     if (!todoId || !date || isNaN(percent)) {
-        alert('Please fill in all fields.');
+        Swal.fire('Please fill in all fields.');
         return;
     }
 
     // Verificar si el porcentaje está dentro del rango permitido
     if (percent < 0 || percent > 100) {
-        percentInput.classList.add('is-invalid');
-        document.getElementById('percent-error').textContent = 'Percent must be between 1 and 99.';
+        s
         return;
     }
 
@@ -119,21 +113,21 @@ const handleAddProgression = async (event) => {
     newProgression = { id: todoId, date, percent };
 
     if (await addProgression(newProgression)) {
-        //await fetchAndDisplayTodoItems();
+        await fetchAndDisplayTodoItems();
         addProgressionForm.reset();
 
         // Ocultar el modal de Bootstrap      
-        const bsAddProgression = bootstrap.Modal.getInstance(addProgressionModal);
-        bsAddProgression.hide();
+        $('#addProgressionModal').modal('hide');
 
     } else {
-        const error = await response.json(); // Leer el cuerpo de la respuesta de error
-        alert(`Failed to add progression: ${error.message}`); // Mostrar el mensaje de error de la API
+        const error = await response.json();
+        Swal.fire(`Failed to add progression: ${error.message}`);
     }
 };
 
 // Función para manejar el evento de clic en el botón "Agregar Todo"
-const handlerbtnAddTodoModal = () => {
+const handlerbtnAddTodoModal = (event) => {
+    event.preventDefault();
     // Cambiar el título del modal
     const modalTitle = document.querySelector('#addTodoModal .modal-title');
     modalTitle.textContent = 'Add Todo Item';
@@ -146,36 +140,21 @@ const handlerbtnAddTodoModal = () => {
     // Desactivar el campo Category
     const categoryInput = document.getElementById('category');
     categoryInput.disabled = false;
-    document.getElementById('id').value = ""; // Select the item in the dropdown
-    document.getElementById('title').value = ""; // Set the title in the modal
-    document.getElementById('description').value = ""; // Set the description in the modal
-    document.getElementById('category').value = ""; // Set the category in the modal            
-}
+    document.getElementById('id').value = "";
+    document.getElementById('title').value = "";
+    document.getElementById('description').value = "";
+    document.getElementById('category').value = "";
 
-
-const handlePrintItems = async () => {
-    printOutput.innerText = await printItems();
+    $('#addTodoModal').modal('show');
 };
 
-const handleApiError = (error) => {
-    console.error('API Error:', error);
-    alert('An unexpected error occurred. Please try again later.');
-};
-
-const showLoading = () => {
-    document.getElementById('loading-indicator').style.display = 'block';
-};
-
-const hideLoading = () => {
-    document.getElementById('loading-indicator').style.display = 'none';
-};
 
 const updateTodoTable = (items) => {
-    displayTodoItems(items, itemsTableBody, calculateTotalPercent);
+    displayTodoItems(items, itemsTableBody);
 };
 
 const updatePrintList = (items) => {
-    displayPrintItems(items, todoListElement, calculateTotalPercent);
+    displayPrintItems(items, todoListElement);
 };
 
 export const fetchAndDisplayTodoItems = async () => {
@@ -186,11 +165,9 @@ export const fetchAndDisplayTodoItems = async () => {
     updatePrintList(items);
 };
 
-
 fetchAndDisplayTodoItems();
 initializeCategories();
 
-addTodoForm.addEventListener('submit', handleAddTodoItem);
-addProgressionForm.addEventListener('submit', handleAddProgression);
+btnAddTodoForm.addEventListener('click', handleAddTodoItem);
+btnAddProgressionModal.addEventListener('click', handleAddProgression);
 btnAddTodoModal.addEventListener('click', handlerbtnAddTodoModal);
-
