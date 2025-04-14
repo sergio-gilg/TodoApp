@@ -50,7 +50,7 @@ export async function updateTodoItem(item) {
             return true;
         } else {
             const error = await response.json(); // Leer el cuerpo de la respuesta de error
-            alert(`Failed to update Todo iremp: ${error.message}`); // Mostrar el mensaje de error de la API        
+            alert(`Failed to update Todo item: ${error.message}`); // Mostrar el mensaje de error de la API        
             return false;
         }
     } catch (error) {
@@ -72,7 +72,7 @@ export async function addProgression(progression) {
             return true;
         } else {
             const error = await response.json(); // Leer el cuerpo de la respuesta de error
-            alert(`Failed to add progression: ${error.message}`); // Mostrar el mensaje de error de la API
+            alert(`Failed to add Progression: ${error.message}`); // Mostrar el mensaje de error de la API        
             return false;
         }
     } catch (error) {

@@ -111,3 +111,4 @@ C:\Projects\TodoApp\tests\TodoApp.Application.Tests\obj\Debug\net9.0\refint\Todo
 C:\Projects\TodoApp\tests\TodoApp.Application.Tests\obj\Debug\net9.0\TodoApp.Application.Tests.pdb
 C:\Projects\TodoApp\tests\TodoApp.Application.Tests\obj\Debug\net9.0\TodoApp.Application.Tests.genruntimeconfig.cache
 C:\Projects\TodoApp\tests\TodoApp.Application.Tests\obj\Debug\net9.0\ref\TodoApp.Application.Tests.dll
+C:\Projects\TodoApp\tests\TodoApp.Application.Tests\obj\Debug\net9.0\TodoApp.Application.Tests.sourcelink.json

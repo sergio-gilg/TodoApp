@@ -2,8 +2,9 @@ using TodoApp.Application.Interfaces;
 using TodoApp.Infrastructure.Repositories;
 using TodoApp.Infrastructure.Services;
 using MediatR;
-using System.Reflection;
 using TodoApp.Application.Commands;
+using Microsoft.EntityFrameworkCore;
+using TodoApp.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,11 @@ builder.Services.AddCors(options =>
                    .AllowAnyHeader();  // Permitir cualquier encabezado
         });
 });
+
+// Registrar el contexto de la base de datos
+builder.Services.AddDbContext<TodoDbContext>(options =>
+    options.UseSqlite("Data Source=TodoApp.db"));
+
 
 var app = builder.Build();
 

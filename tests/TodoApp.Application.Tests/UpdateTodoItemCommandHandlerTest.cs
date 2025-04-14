@@ -49,4 +49,36 @@ public class UpdateTodoItemCommandHandlerTest
         var exception = await Record.ExceptionAsync(() => _handler.Handle(command, CancellationToken.None));
         Assert.Null(exception);
     }
+
+     [Fact]
+    public void Properties_ShouldBeSetCorrectly()
+    {
+        // Arrange
+        var command = new UpdateTodoItemCommand
+        {
+            Id = 1,
+            Title = "Test Title",
+            Description = "Test Description",
+            Category = "Test Category"
+        };
+
+        // Assert
+        Assert.Equal(1, command.Id);
+        Assert.Equal("Test Title", command.Title);
+        Assert.Equal("Test Description", command.Description);
+        Assert.Equal("Test Category", command.Category);
+    }
+
+    [Fact]
+    public void DefaultConstructor_ShouldInitializePropertiesToDefaultValues()
+    {
+        // Arrange
+        var command = new UpdateTodoItemCommand();
+
+        // Assert
+        Assert.Equal(0, command.Id);
+        Assert.Null(command.Title);
+        Assert.Null(command.Description);
+        Assert.Null(command.Category);
+    }
 }

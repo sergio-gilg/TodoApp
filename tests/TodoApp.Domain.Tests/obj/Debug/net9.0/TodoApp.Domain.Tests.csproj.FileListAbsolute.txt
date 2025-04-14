@@ -100,3 +100,4 @@ C:\Projects\TodoApp\tests\TodoApp.Domain.Tests\obj\Debug\net9.0\refint\TodoApp.D
 C:\Projects\TodoApp\tests\TodoApp.Domain.Tests\obj\Debug\net9.0\TodoApp.Domain.Tests.pdb
 C:\Projects\TodoApp\tests\TodoApp.Domain.Tests\obj\Debug\net9.0\TodoApp.Domain.Tests.genruntimeconfig.cache
 C:\Projects\TodoApp\tests\TodoApp.Domain.Tests\obj\Debug\net9.0\ref\TodoApp.Domain.Tests.dll
+C:\Projects\TodoApp\tests\TodoApp.Domain.Tests\obj\Debug\net9.0\TodoApp.Domain.Tests.sourcelink.json

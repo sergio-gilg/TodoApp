@@ -3,16 +3,19 @@ using TodoApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TodoApp.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace TodoApp.Infrastructure.Services;
 
 public class TodoList : ITodoList
 {
-    private static List<TodoItem> items = new List<TodoItem>();
+    private readonly TodoDbContext _dbContext;
     private readonly ITodoListRepository _repository;
 
-    public TodoList(ITodoListRepository repository)
+    public TodoList(TodoDbContext dbContext, ITodoListRepository repository)
     {
+        _dbContext = dbContext;
         _repository = repository;
     }
 
@@ -22,13 +25,17 @@ public class TodoList : ITodoList
         {
             throw new ArgumentException("Category not found");
         }
-        items.Add(new TodoItem { Id = id, Title = title, Description = description, Category = category, Progressions = new List<Progression>() });
+        _dbContext.TodoItems.Add(new TodoItem { Id = id, Title = title, Description = description, Category = category, Progressions = new List<Progression>() });
+        _dbContext.SaveChanges();
     }
 
     public void UpdateItem(int id, string description)
     {
-        var item = items.Find(i => i.Id == id);
-        if (item == null) 
+        var item = _dbContext.TodoItems
+        .Include(t=>t.Progressions)
+        .FirstOrDefault(t => t.Id == id);
+
+        if (item == null)
         {
             throw new ArgumentException($"TodoItem with Id {id} not found.");
         }
@@ -37,26 +44,34 @@ public class TodoList : ITodoList
             throw new InvalidOperationException("Item cannot be updated.");
         }
         item.Description = description;
+        _dbContext.SaveChanges();
     }
 
     public void RemoveItem(int id)
     {
-        var item = items.Find(i => i.Id == id);
+        var item = _dbContext.TodoItems
+        .Include(t=>t.Progressions)
+        .FirstOrDefault(t => t.Id == id);
+
         if (item == null)
         {
             throw new ArgumentException($"TodoItem with Id {id} not found.");
         }
         if (item.Progressions.Sum(i => i.Percent) > 50)
         {
-            throw new InvalidOperationException("Item cannot be removed.");
+            throw new InvalidOperationException("The item cannot be removed because its progress exceeds 50%.");
         }
-        items.Remove(item);
+        _dbContext.TodoItems.Remove(item);
+        _dbContext.SaveChanges();
     }
 
     public void RegisterProgression(int id, DateTime dateTime, decimal percent)
     {
-        var item = items.Find(i => i.Id == id);
-        if (item == null)  
+         var item = _dbContext.TodoItems
+        .Include(t=>t.Progressions)
+        .FirstOrDefault(t => t.Id == id);
+
+        if (item == null)
         {
             throw new ArgumentException($"TodoItem with Id {id} not found.");
         }
@@ -75,17 +90,19 @@ public class TodoList : ITodoList
             throw new InvalidOperationException("Total percent exceed 100%.");
         }
 
-        item.Progressions.Add(new Progression { Date = dateTime, Percent = percent });
+        var progression = new Progression { Date = dateTime, Percent = percent, TodoItemId = id  };
+        item.Progressions.Add(progression);
+        _dbContext.SaveChanges();
     }
 
     public List<TodoItem> GetItems()
     {
-        return items.OrderBy(i => i.Id).ToList();
+          return _dbContext.TodoItems.Include(t => t.Progressions).OrderBy(i => i.Id).ToList();
     }
 
     public void PrintItems()
     {
-        foreach (var item in items.OrderBy(i => i.Id))
+        foreach (var item in _dbContext.TodoItems.Include(t => t.Progressions).OrderBy(i => i.Id))
         {
             Console.WriteLine($"{item.Id}) {item.Title} - {item.Description} ({item.Category}) Completed:{item.IsCompleted}");
             decimal totalPercent = 0;

@@ -1,5 +1,5 @@
 import { removeTodoItem } from './api.js';
-import { fetchAndDisplayTodoItems } from './app.js'; 
+import { fetchAndDisplayTodoItems } from './app.js';
 
 export function displayPrintItems(items, todoListElement) {
     todoListElement.innerHTML = '';
@@ -61,6 +61,9 @@ export function displayTodoItems(items, itemsTableBody, calculateTotalPercent) {
             document.getElementById('todo-id').value = todoId; // Select the item in the dropdown
             const todoTitle = button.dataset.title; // Get the title from the button's data attribute
             document.getElementById('todo-title').value = todoTitle; // Set the title in the modal
+            // Limpiar los campos de la modal
+            document.getElementById('date').value = ''; // Clear the date input
+            document.getElementById('percent').value = ''; // Clear the percent input
             // Use Bootstrap's Modal class to show the modal
             const progressionModalElement = document.getElementById('addProgressionModal');
             const progressionModal = new bootstrap.Modal(progressionModalElement);
@@ -80,7 +83,21 @@ export function displayTodoItems(items, itemsTableBody, calculateTotalPercent) {
             document.getElementById('description').value = todoDescription; // Set the description in the modal
             const todoCategory = button.dataset.category; // Get the category from the button's data attribute
             document.getElementById('category').value = todoCategory; // Set the category in the modal
-            // Use Bootstrap's Modal class to show the modal
+
+            // Cambiar el título del modal
+            const modalTitle = document.querySelector('#addTodoModal .modal-title');
+            modalTitle.textContent = 'Update Todo Item';
+            // Cambiar el texto del botón "Agregar"
+            const modalButton = document.querySelector('#addTodoModal .btn-primary');
+            modalButton.textContent = 'Update';
+            // Desactivar el campo Title
+            const titleInput = document.getElementById('title');
+            titleInput.disabled = true;
+            // Desactivar el campo Category
+            const categoryInput = document.getElementById('category');
+            categoryInput.disabled = true;
+
+            // Use Bootstrap's Modal class to show the modal 
             const addTodoModalElement = document.getElementById('addTodoModal');
             const addTodoModal = new bootstrap.Modal(addTodoModalElement);
             addTodoModal.show();
@@ -90,14 +107,14 @@ export function displayTodoItems(items, itemsTableBody, calculateTotalPercent) {
     // Add event listeners to the remove buttons
     const removeTodoItemButtons = document.querySelectorAll('.remove-todoItem-btn');
     removeTodoItemButtons.forEach(button => {
-        button.addEventListener('click', async () => {
+        button.addEventListener('click', async (event) => {
+            event.preventDefault();
+  
             const todoId = parseInt(button.dataset.id, 10);
             if (confirm('Are you sure you want to delete this Todo item?')) {
                 try {
                     if (await removeTodoItem(todoId)) {
-                        await fetchAndDisplayTodoItems();
-                    } else {
-                        alert('Failed to delete Todo item!');
+                        await fetchAndDisplayTodoItems();                   
                     }
                 } catch (error) {
                     console.error('Error deleting Todo item:', error);

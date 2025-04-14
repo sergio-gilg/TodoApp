@@ -22,75 +22,78 @@ class Program
         await RunApp(host.Services);
     }
 
-    static async Task RunApp(IServiceProvider services)
+    static Task RunApp(IServiceProvider services)
     {
         using IServiceScope scope = services.CreateScope();
         ITodoList todoList = scope.ServiceProvider.GetRequiredService<ITodoList>();
         ITodoListRepository repository = scope.ServiceProvider.GetRequiredService<ITodoListRepository>();
-        try
+        return Task.Run(() =>
         {
-            // Lógica de la aplicación de consola aquí
-            int nextId = repository.GetNextId();
-            todoList.AddItem(nextId, "Complete Console App", "Finish the console application logic", "Work");
-
-            nextId = repository.GetNextId();
-            todoList.AddItem(nextId, "Buy Groceries", "Get food for the week", "Personal");
-
-            todoList.RegisterProgression(1, DateTime.Now.AddDays(-2), 20);
-            todoList.RegisterProgression(1, DateTime.Now.AddDays(-1), 30);
-            todoList.RegisterProgression(1, DateTime.Now, 50);
-
-            todoList.RegisterProgression(2, DateTime.Now.AddDays(-1), 40);
-            todoList.RegisterProgression(2, DateTime.Now, 60);
-
-            todoList.PrintItems();
-
-            bool continueRunning = true;
-            while (continueRunning)
+            try
             {
-                Console.WriteLine("\nChoose an action:");
-                Console.WriteLine("1. Add a new TodoItem");
-                Console.WriteLine("2. Register progression for a TodoItem");
-                Console.WriteLine("3. Print all TodoItems");
-                Console.WriteLine("4. Exit");
+                // Lógica de la aplicación de consola aquí
+                int nextId = repository.GetNextId();
+                todoList.AddItem(nextId, "Complete Console App", "Finish the console application logic", "Work");
 
-                string choice = Console.ReadLine();
+                nextId = repository.GetNextId();
+                todoList.AddItem(nextId, "Buy Groceries", "Get food for the week", "Personal");
 
-                switch (choice)
+                todoList.RegisterProgression(1, DateTime.Now.AddDays(-2), 20);
+                todoList.RegisterProgression(1, DateTime.Now.AddDays(-1), 30);
+                todoList.RegisterProgression(1, DateTime.Now, 50);
+
+                todoList.RegisterProgression(2, DateTime.Now.AddDays(-1), 40);
+                todoList.RegisterProgression(2, DateTime.Now, 60);
+
+                todoList.PrintItems();
+
+                bool continueRunning = true;
+                while (continueRunning)
                 {
-                    case "1":
-                        AddNewTodoItem(todoList, repository);
-                        break;
-                    case "2":
-                        RegisterProgressionForTodoItem(todoList);
-                        break;
-                    case "3":
-                        todoList.PrintItems();
-                        break;
-                    case "4":
-                        continueRunning = false;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid choice. Please try again.");
-                        break;
+                    Console.WriteLine("\nChoose an action:");
+                    Console.WriteLine("1. Add a new TodoItem");
+                    Console.WriteLine("2. Register progression for a TodoItem");
+                    Console.WriteLine("3. Print all TodoItems");
+                    Console.WriteLine("4. Exit");
+
+                    string choice = Console.ReadLine() ?? string.Empty;
+
+                    switch (choice)
+                    {
+                        case "1":
+                            AddNewTodoItem(todoList, repository);
+                            break;
+                        case "2":
+                            RegisterProgressionForTodoItem(todoList);
+                            break;
+                        case "3":
+                            todoList.PrintItems();
+                            break;
+                        case "4":
+                            continueRunning = false;
+                            break;
+                        default:
+                            Console.WriteLine("Invalid choice. Please try again.");
+                            break;
+                    }
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        });
     }
 
     static void AddNewTodoItem(ITodoList todoList, ITodoListRepository repository)
     {
         Console.WriteLine("\nEnter details for the new TodoItem:");
         Console.Write("Title: ");
-        string title = Console.ReadLine();
+        string title = Console.ReadLine() ?? string.Empty;
         Console.Write("Description: ");
-        string description = Console.ReadLine();
+        string description = Console.ReadLine() ?? string.Empty;
         Console.Write("Category: ");
-        string category = Console.ReadLine();
+        string category = Console.ReadLine() ?? string.Empty;
 
         try
         {

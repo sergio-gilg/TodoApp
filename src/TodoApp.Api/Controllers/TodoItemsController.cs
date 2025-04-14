@@ -41,8 +41,7 @@ public class TodoItemsController : ControllerBase
     public async Task<IActionResult> UpdateTodoItem([FromBody] UpdateTodoItemCommand command)
     {
         try
-        {
-            Console.WriteLine($"Updating TodoItem with ID: {command.Id}");
+        {           
             await _mediator.Send(command);
             return Ok();
         }

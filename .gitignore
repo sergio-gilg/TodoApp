@@ -5,5 +5,8 @@
 *.suo
 *.csproj.user
 *.sln.docstates
+*.dll
+*.exe
+*.pdb
 /client/node_modules
 /client/dist
